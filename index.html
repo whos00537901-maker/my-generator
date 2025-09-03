@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Things Generator</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background: #fff;
+        padding: 25px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        text-align: center;
+        width: 350px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      select, input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+      }
+
+      button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background: #45a049;
+      }
+
+      #enter {
+        margin-top: 20px;
+        font-size: 1rem;
+      }
+
+      .g-recaptcha {
+        display: flex;
+        justify-content: center;
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>This is a website that generates...</h1>
+
+      <select id="Payment">
+        <option value="">N/A</option>
+        <option value="Money (Sent to Paypal)" data-currency="$">Money (Sent to Paypal)</option>
+        <option value="Robux (From Roblox)" data-currency="R$">Robux (From Roblox)</option>
+        <option value="Free Fire Points (Not recommended)" data-currency="♦">Free Fire Points (Not recommended)</option>
+        <option value="Fortnite's Points" data-currency="✦">Fortnite's Points</option>
+      </select>
+
+      <input id="Money" type="number" placeholder="Your Amount">
+
+      <!-- Google reCAPTCHA -->
+      <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+
+      <button type="button" id="Gen" onclick="GenFunc()">Generate</button>
+      <p id="enter"></p>
+    </div>
+
+    <script>
+      function GenFunc() {
+        let money = Number(document.getElementById("Money").value);
+        let paymentSelect = document.getElementById("Payment");
+        let option = paymentSelect.value;
+        let currency = paymentSelect.options[paymentSelect.selectedIndex].getAttribute("data-currency");
+
+        // Check if captcha is completed
+        let captchaResponse = grecaptcha.getResponse();
+        if (!captchaResponse) {
+          document.getElementById("enter").innerHTML =
+            "<p style='color:red;'>Please verify you are not a robot</p>";
+          return;
+        }
+
+        if (money <= 0) {
+          document.getElementById("enter").innerHTML = 
+            "<p style='color:red;'>Please type your amount greater than 0</p>";
+        } 
+        else if (option === "") {
+          document.getElementById("enter").innerHTML = 
+            "<p style='color:red;'>Please select a payment method</p>";
+        } 
+        else {
+          let formattedMoney = money.toLocaleString();
+
+          document.getElementById("enter").innerHTML = 
+            "<p style='color:green;'>Your " + option + 
+            " <b>" + currency + formattedMoney + "</b> has been sent to your account. Hope you enjoy!</p>";
+        }
+      }
+    </script>
+  </body>
+</html>
